@@ -222,7 +222,7 @@ if __name__ == "__main__":
                 f" mse: {mse_loss.item():.4f}; lr: {lr:.4f}"
             )
         )
-
+   
     img_gen, _ = g_ema([latent_path[-1]], input_is_latent=True, noise=noises)
 
     filename = os.path.splitext(os.path.basename(args.files[0]))[0] + ".pt"
