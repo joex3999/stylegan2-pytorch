@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name="stylegan_cityscapes"
+#SBATCH --job-name="stylegan_cityscapes_faragy"
 #SBATCH --nodes=2
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=32G
@@ -12,5 +12,5 @@
 #SBATCH --error=./slurmDebug/slurm-%j.out
 
 
-python -m torch.distributed.launch  train.py  "~/storage/user/main/faragy/data" --iter 1000
+python train.py  "/content/stylegan2/data/" --iter 1000
 #python main_test.py
