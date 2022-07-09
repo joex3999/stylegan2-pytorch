@@ -12,5 +12,5 @@
 #SBATCH --error=./slurmDebug/slurm-%j.out
 
 
-python train.py  "/content/stylegan2/data/" --iter 1000
+/bin/bash: wq: command not found
 #python main_test.py
