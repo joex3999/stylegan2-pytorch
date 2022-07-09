@@ -13,4 +13,3 @@
 
 
 python train.py  "/usr/stud/faragy/storage/user/main/faragy/data" --iter 1000
-#python main_test.py
