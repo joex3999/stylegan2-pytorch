@@ -8,8 +8,7 @@
 #SBATCH --mail-type=ALL
 ##SBATCH --partition=DEADLINE
 ##SBATCH --comment=ECCVRebuttal
-#SBATCH --output=/usr/stud/faragy/storage/slurm/slurmDebug/slurm-%j.out
-#SBATCH --error=/usr/stud/faragy/storage/slurm/slurmDebug/slurm-%j.out
+#SBATCH --output=/usr/stud/faragy/storage/slurm/slurmDebug/slurm_temp_output.out
+#SBATCH --error=/usr/stud/faragy/storage/slurm/slurmDebug/slurm_temp_error.out
 
-
-python train.py  "/usr/stud/faragy/storage/user/main/faragy/data" --iter 1000
+ python train.py  "/usr/stud/faragy/storage/user/main/faragy/data" --iter 1000
