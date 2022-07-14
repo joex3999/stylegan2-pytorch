@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=32G
 #SBATCH --gpus=a40:1
-#SBATCH --time=20:00:00
+#SBATCH --time=40:00:00
 #SBATCH --mail-type=ALL
 ##SBATCH --partition=DEADLINE
 ##SBATCH --comment=ECCVRebuttal
