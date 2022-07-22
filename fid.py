@@ -19,13 +19,14 @@ def extract_feature_from_samples(
     resid = n_sample - (n_batch * batch_size)
     batch_sizes = [batch_size] * n_batch + [resid]
     features = []
-
+    print("Before TQDM")
     for batch in tqdm(batch_sizes):
         latent = torch.randn(batch, 512, device=device)
         img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
         feat = inception(img)[0].view(img.shape[0], -1)
         features.append(feat.to("cpu"))
-
+    print("Features before CAT")
+    print(features.shape)
     features = torch.cat(features, 0)
 
     return features
