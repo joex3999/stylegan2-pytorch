@@ -12,5 +12,5 @@
 #SBATCH --error=/usr/stud/faragy/storage/slurm/slurmDebug/slurm_temp_error.out
 
 #python train.py --ckpt "/usr/stud/faragy/storage/user/main/faragy/stylegan2-pytorch/checkpoint/040000.pt" "/usr/stud/faragy/storage/user/main/faragy/data/lmdb" 
-python calc_inception.py --size 256 --batch 16 "/usr/stud/faragy/storage/user/main/faragy/data/lmdb" 
-#python fid.py --batch 16 --inception  "/usr/stud/faragy/storage/user/main/faragy/data/inception/****" "/usr/stud/faragy/storage/user/main/faragy/stylegan2-pytorch/checkpoint/060000.pt"
+#python calc_inception.py --size 256 --batch 16 "/usr/stud/faragy/storage/user/main/faragy/data/lmdb" 
+python fid.py --batch 16 --inception  "/usr/stud/faragy/storage/user/main/faragy/data/inception/inception_lmdb.pkl" "/usr/stud/faragy/storage/user/main/faragy/stylegan2-pytorch/checkpoint/060000.pt"
