@@ -6,10 +6,10 @@ from torch import nn
 import numpy as np
 from scipy import linalg
 from tqdm import tqdm
-
+import json
 from model import Generator
 from calc_inception import load_patched_inception_v3
-
+from pathlib import Path
 
 @torch.no_grad()
 def extract_feature_from_samples(
@@ -20,18 +20,13 @@ def extract_feature_from_samples(
     batch_sizes = [batch_size] * n_batch + [resid]
     features = []
     print("Before TQDM")
-    try:
-        for batch in tqdm(batch_sizes):
-            latent = torch.randn(batch, 512, device=device)
-            img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
-            feat = inception(img)[0].view(img.shape[0], -1)
-            features.append(feat.to("cpu"))
-    except Exception :
-            print(Exception)
-    print("Features before CAT")
-    print(features.shape)
+    for batch in tqdm(batch_sizes):
+        latent = torch.randn(batch, 512, device=device)
+        img, _ = g([latent], truncation=truncation, truncation_latent=truncation_latent)
+        feat = inception(img)[0].view(img.shape[0], -1)
+        features.append(feat.to("cpu"))
     features = torch.cat(features, 0)
-
+    print("After TQDM")
     return features
 
 
@@ -60,6 +55,13 @@ def calc_fid(sample_mean, sample_cov, real_mean, real_cov, eps=1e-6):
 
     return fid
 
+def save_fid_info(checkpoint,fid,location):
+    key_name=Path(checkpoint).stem
+    f = open(location)
+    fids = json.load(f)
+    fids[key_name]=fid
+    with open(location, 'w') as fp:
+        json.dump(fids, fp)
 
 if __name__ == "__main__":
     device = "cuda"
@@ -91,6 +93,12 @@ if __name__ == "__main__":
         default=None,
         required=True,
         help="path to precomputed inception embedding",
+    )
+    parser.add_argument(
+        "--fid_json_file",
+        type=str,
+        required=True,
+        help="path to saved fid json file",
     )
     parser.add_argument(
         "ckpt", metavar="CHECKPOINT", help="path to generator checkpoint"
@@ -129,5 +137,5 @@ if __name__ == "__main__":
         real_cov = embeds["cov"]
 
     fid = calc_fid(sample_mean, sample_cov, real_mean, real_cov)
-
     print("fid:", fid)
+    save_fid_info(args.ckpt,fid,args.fid_json_file)
