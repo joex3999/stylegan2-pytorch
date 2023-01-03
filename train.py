@@ -11,7 +11,7 @@ from torch.utils import data
 import torch.distributed as dist
 from torchvision import transforms, utils
 from tqdm import tqdm
-
+import subprocess
 try:
     import wandb
 
@@ -121,7 +121,11 @@ def set_grad_none(model, targets):
     for n, p in model.named_parameters():
         if n in targets:
             p.grad = None
-
+def calculate_fid(checkpoint,inception_file,fid_json_file):
+        print(f"Calculating FID.")
+        command = f"python fid.py  --inception {inception_file} --fid_json_file {fid_json_file} {checkpoint}"
+        s = subprocess.getstatusoutput(command)
+        print(f"FID result : {s}")
 
 def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, device):
     loader = sample_data(loader)
@@ -327,7 +331,9 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
                     },
                     f"checkpoint/{str(i).zfill(6)}_{args.suffix}.pt",
                 )
-
+                checkpoint = f"checkpoint/{str(i).zfill(6)}_{args.suffix}.pt"
+                os.environ['MKL_THREADING_LAYER'] = 'GNU'
+                calculate_fid(checkpoint,args.inception,args.fid_json_file)
 
 if __name__ == "__main__":
     device = "cuda"
@@ -432,7 +438,19 @@ if __name__ == "__main__":
         type=str,
         help="An extra suffix for checkpoints",
     )
-
+    parser.add_argument(
+        "--inception",
+        type=str,
+        default=None,
+        required=True,
+        help="path to precomputed inception embedding",
+    )
+    parser.add_argument(
+        "--fid_json_file",
+        type=str,
+        required=True,
+        help="path to saved fid json file",
+    )
 
     args = parser.parse_args()
 

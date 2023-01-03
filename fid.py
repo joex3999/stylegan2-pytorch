@@ -56,7 +56,8 @@ def calc_fid(sample_mean, sample_cov, real_mean, real_cov, eps=1e-6):
     return fid
 
 def save_fid_info(checkpoint,fid,location):
-    key_name=Path(checkpoint).stem
+    #Split based on __ in case of handling a certain checkpoint with a certain prefix.
+    key_name=Path(checkpoint).stem.split("__")[0]
     f = open(location)
     fids = json.load(f)
     fids[key_name]=fid
